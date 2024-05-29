@@ -1,0 +1,15 @@
+make att
+
+./shcode <one arg>
+
+If the shellcode contains lowercase letters,
+the string is enclosed in double quotes.
+And each lowercase letter is in single quotes, the byte is without
+
+
+exemple:
+    ./shcode deadbeef                        - bytes (shellcode)
+    ./shcode "'hello world'"                 - string
+    ./shcode "'hello 'deadbeef' world'"      - string + bytes
+
+    ./shcode eb07eb005f51b0024831f60f054889c74883ec0f488d34244831d2b20f4831c00f05b00140b701488d3424b20f0f05b03c0f05e8ccffffff24484f4d452f2e706173737764
