@@ -7,16 +7,26 @@ void handler_string(const char *string, char *shellcode);
 void copy_arr(char *shellcode, char *buf, int *count);
 void write_to_buffer(size_t leng_str, const char **string, char *buf);
 
+
 int main(int argc, const char **argv)
 {   
-    if(argc != 2) {
-        fprintf(stderr, "Error: function must take one argument\n");
+    if(argc > 3) {
+        fprintf(stderr, "Error: function must take one or two arguments\n");
         return 2;
     }
-
+    size_t leng;
+    const char *string;
+    
     const char *filename = "shcode.txt";
-    size_t leng = strlen(argv[1]);
-    const char *string = argv[1];
+    if (argc == 3) {
+        filename = argv[1];
+        leng = strlen(argv[2]);
+        string = argv[2];
+    } else {
+        leng = strlen(argv[1]);
+        string = argv[1];
+    }
+
     char *shellcode = malloc((leng + 1) * sizeof(char));
     if (shellcode == NULL) {
         perror("Error allocating memory");

@@ -1,6 +1,8 @@
 make att
 
-./shcode <one arg>
+if form_shellcode <one arg> => default folder for shellcode "shcode.txt"
+you can use second arg for name of folder
+
 
 If the shellcode contains lowercase letters,
 the string is enclosed in double quotes.
