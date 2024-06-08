@@ -1,17 +1,35 @@
-make att
+assembly: make all
+
+NAME
+    shcode - remove files or directories
+
+SYNOPSIS
+    shcode [arg1] [arg2]
+    arg1 - it another name for output-file. (not necessary). default "shcode.txt"
+    arg2 - FILE with shellcode or bytes-shellcode
+
 
 if form_shellcode <one arg> => default folder for shellcode "shcode.txt"
 you can use second arg for name of folder
 
+you can use file with shellcode, like argument
 
 If the shellcode contains lowercase letters,
 the string is enclosed in double quotes.
 And each lowercase letter is in single quotes, the byte is without
 
 
-exemple:
-    ./shcode deadbeef                        - bytes (shellcode)
-    ./shcode "'hello world'"                 - string
-    ./shcode "'hello 'deadbeef' world'"      - string + bytes
 
-    ./shcode eb07eb005f51b0024831f60f054889c74883ec0f488d34244831d2b20f4831c00f05b00140b701488d3424b20f0f05b03c0f05e8ccffffff24484f4d452f2e706173737764
+exemple:
+    ./shcode deadbeef                                       - bytes (shellcode)
+    ./shcode "'hello world'"                                - string
+    ./shcode "'hello 'deadbeef' world'"                     - string + bytes
+    ./shcode another_file.txt "'hello 'deadbeef' world'"    - another output file, string + bytes
+
+    ./shcode file_name                                      - file (shellcode)
+    ./shcode another_file.txt file_name                     - another file for save shellcode + file
+
+    ./shcode eb07eb5f51b0024831f60f054889c74883ec0f488d34244831d2b20f4831c00f05b00140b701488d3424b20f0f05b03c0f05e8ccffffff24484f4d452f2e706173737764
+    ./shcode eb 07 eb 5f 51 b0 02 48 31 f6 0f 05 48 89 c7 48 83 ec 0f 48 8d 34 24 48 31 d2 b2
+    ./shcode \xeb\x07\xeb\x5f\x51\xb0\x02\x48\x31\xf6\x0f\x05\x48\x89\xc7\x48\x83\xec\x0f\x48
+    ./shcode \Xeb\X07\Xeb\X5f\X51\Xb0\X02\X48\X31\Xf6\X0f\X05\X48\X89\Xc7\X48\X83\Xec\X0f\X48
