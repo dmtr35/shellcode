@@ -17,7 +17,8 @@ int check_file(char *file_name);
 // handler_string.c:
 void handler_string(char *string, char **shellcode);
 void copy_arr(char *shellcode, char *buf, int *count);
-void write_to_buffer(size_t leng_str, char **string, char *buf);
+void write_to_buf(size_t leng_str, char **string, char *buf);
+void write_to_buf_delete_x(size_t leng_str, char **string, char *buf);
 
 // handler_file.c:
 void handler_file(char *arg, char **shellcode);

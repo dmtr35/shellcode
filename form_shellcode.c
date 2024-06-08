@@ -9,9 +9,7 @@ int main(int argc, char *argv[])
         return 2;
     }
 
-
     char *filename;
-    char *string;
     char *shellcode;
 
 // ==============================================================
@@ -22,8 +20,7 @@ int main(int argc, char *argv[])
         if (check) {
             handler_file(argv[2], &shellcode);
         } else {
-            string = argv[2];
-            handler_string(string, &shellcode);
+            handler_string(argv[2], &shellcode);
         }
     } else {
         filename = "shcode.txt";
@@ -31,11 +28,11 @@ int main(int argc, char *argv[])
         if (check) {
             handler_file(argv[1], &shellcode);
         } else {
-            string = argv[1];
-            handler_string(string, &shellcode);
+            handler_string(argv[1], &shellcode);
         }
     }
 
+// ==============================================================
     size_t shellcode_leng = strlen(shellcode);
 
     FILE *file = fopen(filename, "wb");
