@@ -1,41 +1,42 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-void func_shellcode(char *string, char *shellcode);
-void handler_string(const char *string, char *shellcode);
-void copy_arr(char *shellcode, char *buf, int *count);
-void write_to_buffer(size_t leng_str, const char **string, char *buf);
+#include "header.h"
 
 
-int main(int argc, const char **argv)
+
+int main(int argc, char *argv[])
 {   
     if(argc > 3) {
         fprintf(stderr, "Error: function must take one or two arguments\n");
         return 2;
     }
-    size_t leng;
-    const char *string;
-    
-    const char *filename = "shcode.txt";
+
+
+    char *filename;
+    char *string;
+    char *shellcode;
+
+// ==============================================================
+
     if (argc == 3) {
         filename = argv[1];
-        leng = strlen(argv[2]);
-        string = argv[2];
+        int check = check_file(argv[2]);
+        if (check) {
+            handler_file(argv[2], &shellcode);
+        } else {
+            string = argv[2];
+            handler_string(string, &shellcode);
+        }
     } else {
-        leng = strlen(argv[1]);
-        string = argv[1];
+        filename = "shcode.txt";
+        int check = check_file(argv[1]);
+        if (check) {
+            handler_file(argv[1], &shellcode);
+        } else {
+            string = argv[1];
+            handler_string(string, &shellcode);
+        }
     }
 
-    char *shellcode = malloc((leng + 1) * sizeof(char));
-    if (shellcode == NULL) {
-        perror("Error allocating memory");
-        return 1;
-    }
-
-    handler_string(string, shellcode);
     size_t shellcode_leng = strlen(shellcode);
-
 
     FILE *file = fopen(filename, "wb");
     if (file == NULL) {
@@ -63,81 +64,13 @@ int main(int argc, const char **argv)
 }
 
 
-void handler_string(const char *string, char *shellcode)
-{
-    char cheker[] = "0123456789abcdefABCDEF";
-    size_t leng_str = strlen(string) + 1;
-    
-    int count = 0;
-    _Bool flag = 0;
-    
-    while(*string) {
-        if(*string == '\'') {
-            flag = !flag;
-            string++;
-        }
 
-        if(*string == '\0') {
-            return;
-        }
-
-        if(flag) {
-            char *buf = malloc(leng_str);
-            if (shellcode == NULL) {
-                perror("Error allocating memory");
-                exit(EXIT_SUCCESS);
-            }
-            write_to_buffer(leng_str, &string, buf);
-
-            copy_arr(shellcode, buf, &count);
-            free(buf);
-        } else {
-            char *ptr_shellcode = shellcode + count;
-            
-            char *buf = malloc(leng_str);
-            if (shellcode == NULL) {
-                perror("Error allocating memory");
-                exit(EXIT_SUCCESS);
-            }
-            write_to_buffer(leng_str, &string, buf);
-
-            size_t leng = strlen(buf);
-            if(leng %2 != 0) {
-                fprintf(stderr, "Error: wrong string length\n");
-                exit(EXIT_SUCCESS);
-            }
-            for (size_t i = 0; i < leng; ++i) {
-                if (strchr(cheker, buf[i]) == NULL) {
-                    fprintf(stderr, "Error: string contains invalid characters\n");
-                    exit(EXIT_SUCCESS);
-                }
-            }
-
-            func_shellcode(buf, ptr_shellcode);
-
-            count += leng / 2;
-            free(buf);
-        }
+int check_file(char *file_name) {
+    struct stat st = {0};
+    if(stat(file_name, &st) == 0) {
+        return 1;
+    } else {
+        return 0;
     }
 }
 
-void copy_arr(char *shellcode, char *buf, int *count)
-{
-    size_t leng = strlen(buf);
-    for(int i = 0; i < leng; ++i) {
-        shellcode[*count] = buf[i];
-        (*count)++;
-    }
-    shellcode[*count] = '\0';
-}
-
-void write_to_buffer(size_t leng_str, const char **string, char *buf)
-{
-    int i = 0;
-    while(**string != '\'' && **string != '\0') {
-        buf[i] = **string;
-        i++;
-        (*string)++;
-    }
-    buf[i] = '\0';
-}
