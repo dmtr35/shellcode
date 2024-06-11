@@ -31,7 +31,7 @@ void handler_string(char *string, char **shellcode)
                 perror("Error allocating memory");
                 exit(EXIT_SUCCESS);
             }
-            write_to_buf(leng_str, &string, buf);
+            write_to_buf(leng_str, &string, buf, flag);
 
             copy_arr(*shellcode, buf, &count);
             free(buf);
@@ -43,7 +43,7 @@ void handler_string(char *string, char **shellcode)
                 perror("Error allocating memory");
                 exit(EXIT_SUCCESS);
             }
-            write_to_buf_delete_x(leng_str, &string, buf);
+            write_to_buf(leng_str, &string, buf, flag);
 
             size_t leng = strlen(buf);
             if(leng %2 != 0) {
@@ -77,22 +77,11 @@ void copy_arr(char *shellcode, char *buf, int *count)
 }
 
 
-void write_to_buf(size_t leng_str, char **string, char *buf)
+void write_to_buf(size_t leng_str, char **string, char *buf, _Bool flag)
 {
     int i = 0;
     while(**string != '\'' && **string != '\0') {
-        buf[i] = **string;
-        i++;
-        (*string)++;
-    }
-    buf[i] = '\0';
-}
-
-void write_to_buf_delete_x(size_t leng_str, char **string, char *buf)
-{
-    int i = 0;
-    while(**string != '\'' && **string != '\0') {
-        if (**string == 'x' || **string == 'X' || **string == '\\' || **string == ' ') {
+        if (!flag && (**string == 'x' || **string == 'X' || **string == '\\' || **string == ' ')) {
             (*string)++;
             continue;
         }
@@ -102,3 +91,4 @@ void write_to_buf_delete_x(size_t leng_str, char **string, char *buf)
     }
     buf[i] = '\0';
 }
+

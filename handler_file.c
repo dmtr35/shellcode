@@ -66,7 +66,7 @@ void handler_file(char *arg, char **shellcode) {
     }
 
     memcpy(*shellcode, data->d_buf, data_size);
-    *shellcode[data_size] = '\0';
+    (*shellcode)[data_size] = '\0';
 
 
     elf_end(e);
